@@ -21,30 +21,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import silhouette_score
 
 
-
-# --------------------------------------------------------------------------- #
-
-
-H = "/net/noble/vol1/home/borislav/"
-P = f"{os.path.dirname(os.path.abspath(__file__))}/../"
-T = f"{P}Temp/"
-O = f"{P}Outputs/"
-D = f"{P}Data/"
-DD = "/Users/bhristov6/Desktop/"
-LD = f"{DD}Code/0LargeData/Trans-contacts/"
-
-BPATH = os.path.dirname(os.path.abspath(__file__))
-
-if BPATH[0:10] == "/net/noble":
-	LD = "/net/noble/vol3/user/borislav/Data/Trans-Contacts/"
-
-
-ALL = "_ALL"
-ALL = ""
-
-print(f"ALL = {ALL}")
-
-
 # --------------------------------------------------------------------------- #
 # Basic timer
 # --------------------------------------------------------------------------- #
