@@ -13,7 +13,7 @@ You can find more about the theory behind trans-C by reading our [paper](link.pd
 
 
 ### Dependencies
-trans-C is implemented in Python and uses the common numpy, sklearn, and scipy packages. Additionally, it relies on the iced and cooler packages, so make sure to install these dependencies (pip installed or conda install work effortlessly).
+trans-C is implemented in Python and uses the common numpy, sklearn, and scipy packages. Additionally, it relies on the iced and cooler packages, so make sure to install these dependencies (pip or conda install work effortlessly).
 
 
 
@@ -26,7 +26,7 @@ Then, simply run:
 
 or
 
-\%> python bin/trans-C.py hic\_file(.cool/.hic/.npy)  chrom\_sizes.txt -100000 seed\_file.bed out\_dir (-alpha 0.5)
+\%> python bin/trans-C.py hic\_file(.cool/.hic/.npy)  chrom\_sizes.txt 100000 seed\_file.bed out\_dir (alpha 0.5)
  
 
 1. The Hi-C matrix needs to be in one of the three common formats: cooler (.cool), hic file (.hic), or numpy object (.npy)
