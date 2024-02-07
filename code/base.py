@@ -236,6 +236,101 @@ def find_clique_weight0(clique, matrix):
 	return weight/2
 
 
+# --------------------------------------------------------------------------- #
+# report basic statistics for the Hi-C data
+# --------------------------------------------------------------------------- #
+
+def report_HiC_stats():
+	cis_space, trans_space, num_cis, num_trans, empty_trans, empty_cis = 0, 0, 0, 0, 0, 0
+	for i in range(nbins):
+		for j in range(i, nbins):
+			if bin_map[i][0] == bin_map[j][0]:
+				num_cis += a[i][j]
+				cis_space += 1
+				if a[i][j] == 0:
+					empty_cis += 1
+			else:
+				num_trans +=  a[i][j]
+				trans_space += 1
+				if a[i][j] == 0:
+					empty_trans += 1
+	
+	total_space = cis_space + trans_space	
+	total_reads = num_cis + num_trans
+	
+	print(f"total_space =\t{total_space}")
+	print(f"cis_space = \t{cis_space}")
+	print(f"trans_space = \t{trans_space}")
+	print(f"trans_space_ratio = \t{trans_space/(trans_space + cis_space)}")
+	print(f"num_cis = \t{num_cis}")
+	print(f"num_trans = \t{num_trans}")
+	print(f"total_reads = \t{total_reads}")
+	print(f"trans_fract = \t{num_trans/total_reads}")
+	print(f"empty_cis = \t{empty_cis}")
+	print(f"empty_trans = \t{empty_trans}")
+	print(f"frac_empty_trans = \t{empty_trans/trans_space}")
+
+
+
+
+# --------------------------------------------------------------------------- #
+# Cytoscape Visualization: write .gml file to use as input to Cytoscape 
+# --------------------------------------------------------------------------- #
+
+def create_gml_file_Cytoscape(fname, fn = "visual"):
+	order = read_bins(f"{fname}")
+	
+	num_nodes = 40
+	
+	fo = open(f"{fout}clique_{fn}.gml", "w")
+	fo.write(f"graph [\ncomment \"This is a sample graph\"\ndirected 0\nweighted 1\n")
+	
+	# we need to hande chr names nicely
+	h_chr = {}
+	for i in range(num_nodes):
+		h_chr[i] = bin_map[order[i]][0].replace('chr', '')
+	
+	# write down the nodes
+	for i in range(num_nodes):
+		# label Mb position
+		mb = round(float(bin_map[order[i]][1])/1000000,1)
+		
+		# order the nodes by bin_id with 0 in front to make it alphabetical
+		lid = order[i]
+		if lid < 10:
+			lid = f"0000{lid}"
+		elif lid < 100:
+			lid = f"000{lid}"
+		elif lid < 1000:
+			lid = f"00{lid}"
+		elif lid < 10000:
+			lid = f"0{lid}"
+		
+		# chromosome order	
+		ch = h_chr[i]
+		if "X" in ch or "Y" in ch:
+			ch = f"chr \"{ch}\""
+		elif float(ch) < 10:
+			ch = f"chr \"a0{ch}\""
+		else:
+			ch = f"chr \"a{ch}\""
+		
+		fo.write(f"node [\nid {i+1}\nlabel \"{mb}\"\nweight 7\norder_by \"{lid}\"\n{ch}\n]\n")
+	
+	# write down the edges
+	for i in range(num_nodes):
+		for j in range(i+1, num_nodes):
+			chr1 = bin_map[order[i]][0]
+			chr2 = bin_map[order[j]][0]
+			
+			if chr1 != chr2:
+				x = a[order[i]][order[j]]
+							
+				fo.write(f"edge [\nsource {i+1}\ntarget {j+1}\nlabel \"{i}-{j}\"\nweight {x}\ncolor {x}\n]\n")
+	fo.write(f"]\n")
+
+
+
 
 
 # --------------------------------------------------------------------------- #
