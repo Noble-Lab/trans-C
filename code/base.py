@@ -224,7 +224,7 @@ def zero_special_regions(a):
 	
 
 # return the weight of a given clique
-def find_clique_weight0(clique, matrix):
+def find_clique_weight(clique, matrix):
 	weight = 0
 	for i in clique:
 		for j in clique:
